@@ -18,7 +18,7 @@ If you want to send a message via a Telegram bot, then you can do it as follows.
 
 ```go
 // Create a new message
-message, err := CreateMessage("Hallo ich bin der Bot der J&J Ideenschmiede GmbH.", "-1234567", "Markdown", "14241124214:ASDJSKALFSIfjewqrfew234123")
+message, err := gotelegrambot.CreateMessage("[J&J Notification][🟠 Warning] Es sind 55 Einträge in der API verzeichnet wurden.", "-1234567", "Markdown", "14241124214:ASDJSKALFSIfjewqrfew234123")
 if err != nil {
     log.Fatalln(err)
 } else {
