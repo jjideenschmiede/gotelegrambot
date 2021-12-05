@@ -25,3 +25,17 @@ if err != nil {
     log.Println(message)
 }
 ```
+
+### Get updates
+
+If you want to view the updates, you can do that with the following function.
+
+```go
+// Get updates
+updates, err := gotelegrambot.Updates("14241124214:ASDJSKALFSIfjewqrfew234123")
+if err != nil {
+    log.Fatalln(err)
+} else {
+    log.Println(updates)
+}
+```
