@@ -10,3 +10,71 @@
 //********************************************************************************************************************//
 
 package gotelegrambot
+
+import (
+	"encoding/json"
+	"net/http"
+)
+
+// TelegramBotMessageReturn is to decode the json data
+type TelegramBotMessageReturn struct {
+	Ok     bool `json:"ok"`
+	Result struct {
+		MessageId int `json:"message_id"`
+		From      struct {
+			Id        int64  `json:"id"`
+			IsBot     bool   `json:"is_bot"`
+			FirstName string `json:"first_name"`
+			Username  string `json:"username"`
+		} `json:"from"`
+		Chat struct {
+			Id                          int    `json:"id"`
+			Title                       string `json:"title"`
+			Type                        string `json:"type"`
+			AllMembersAreAdministrators bool   `json:"all_members_are_administrators"`
+		} `json:"chat"`
+		Date int    `json:"date"`
+		Text string `json:"text"`
+	} `json:"result"`
+}
+
+// TelegramBotMessage is to create a message with a bot in a Telegram chat
+func TelegramBotMessage(message, chatId, parseMode, apiToken string) (TelegramBotMessageReturn, error) {
+
+	// Get base url
+	url := "https://api.telegram.org/bot" + apiToken + "/sendMessage"
+
+	// Define client for request
+	client := &http.Client{}
+
+	// Define request
+	request, err := http.NewRequest("GET", url, nil)
+	if err != nil {
+		return TelegramBotMessageReturn{}, err
+	}
+
+	// Parse url & add attributes
+	parse := request.URL.Query()
+	parse.Add("chat_id", chatId)
+	parse.Add("parse_mode", parseMode)
+	parse.Add("text", message)
+	request.URL.RawQuery = parse.Encode()
+
+	// Send request
+	response, err := client.Do(request)
+	if err != nil {
+		return TelegramBotMessageReturn{}, err
+	}
+
+	// Decode response
+	var decode TelegramBotMessageReturn
+
+	err = json.NewDecoder(response.Body).Decode(&decode)
+	if err != nil {
+		return TelegramBotMessageReturn{}, err
+	}
+
+	// Return data
+	return decode, nil
+
+}
