@@ -16,8 +16,8 @@ import (
 	"net/http"
 )
 
-// TelegramBotMessageReturn is to decode the json data
-type TelegramBotMessageReturn struct {
+// CreateMessageReturn is to decode the json data
+type CreateMessageReturn struct {
 	Ok     bool `json:"ok"`
 	Result struct {
 		MessageId int `json:"message_id"`
@@ -38,8 +38,8 @@ type TelegramBotMessageReturn struct {
 	} `json:"result"`
 }
 
-// TelegramBotMessage is to create a message with a bot in a Telegram chat
-func TelegramBotMessage(message, chatId, parseMode, apiToken string) (TelegramBotMessageReturn, error) {
+// CreateMessage is to create a message with a bot in a Telegram chat
+func CreateMessage(message, chatId, parseMode, apiToken string) (CreateMessageReturn, error) {
 
 	// Get base url
 	url := "https://api.telegram.org/bot" + apiToken + "/sendMessage"
@@ -50,7 +50,7 @@ func TelegramBotMessage(message, chatId, parseMode, apiToken string) (TelegramBo
 	// Define request
 	request, err := http.NewRequest("GET", url, nil)
 	if err != nil {
-		return TelegramBotMessageReturn{}, err
+		return CreateMessageReturn{}, err
 	}
 
 	// Parse url & add attributes
@@ -63,15 +63,15 @@ func TelegramBotMessage(message, chatId, parseMode, apiToken string) (TelegramBo
 	// Send request
 	response, err := client.Do(request)
 	if err != nil {
-		return TelegramBotMessageReturn{}, err
+		return CreateMessageReturn{}, err
 	}
 
 	// Decode response
-	var decode TelegramBotMessageReturn
+	var decode CreateMessageReturn
 
 	err = json.NewDecoder(response.Body).Decode(&decode)
 	if err != nil {
-		return TelegramBotMessageReturn{}, err
+		return CreateMessageReturn{}, err
 	}
 
 	// Return data
