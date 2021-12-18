@@ -13,7 +13,8 @@ package gotelegrambot
 
 import (
 	"encoding/json"
-	"net/http"
+	"fmt"
+	"net/url"
 )
 
 // CreateMessageReturn is to decode the json data
@@ -39,29 +40,36 @@ type CreateMessageReturn struct {
 }
 
 // CreateMessage is to create a message with a bot in a Telegram chat
-func CreateMessage(message, chatId, parseMode, apiToken string) (CreateMessageReturn, error) {
+func CreateMessage(message, chatId, parseMode string, r Request) (CreateMessageReturn, error) {
 
-	// Get base url
-	url := baseUrl + apiToken + "/sendMessage"
+	// Set config for request
+	c := Config{
+		Path:   "/sendMessage",
+		Method: "GET",
+		Body:   nil,
+	}
 
-	// Define client for request
-	client := &http.Client{}
-
-	// Define request
-	request, err := http.NewRequest("GET", url, nil)
+	// Parse url & add attributes
+	parse, err := url.Parse(c.Path)
 	if err != nil {
 		return CreateMessageReturn{}, err
 	}
 
-	// Parse url & add attributes
-	parse := request.URL.Query()
-	parse.Add("chat_id", chatId)
-	parse.Add("parse_mode", parseMode)
-	parse.Add("text", message)
-	request.URL.RawQuery = parse.Encode()
+	newUrl, err := url.ParseQuery(parse.RawQuery)
+	if err != nil {
+		return CreateMessageReturn{}, err
+	}
+
+	newUrl.Add("chat_id", chatId)
+	newUrl.Add("parse_mode", parseMode)
+	newUrl.Add("text", message)
+
+	// Set new url
+	parse.RawQuery = newUrl.Encode()
+	c.Path = fmt.Sprintf("%s", parse)
 
 	// Send request
-	response, err := client.Do(request)
+	response, err := c.Send(r)
 	if err != nil {
 		return CreateMessageReturn{}, err
 	}

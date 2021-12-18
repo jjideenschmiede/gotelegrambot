@@ -13,7 +13,8 @@ package gotelegrambot
 
 import (
 	"encoding/json"
-	"net/http"
+	"fmt"
+	"net/url"
 )
 
 // WebhookBody is to decode the json data
@@ -53,30 +54,40 @@ type SetWebhookReturn struct {
 }
 
 // SetWebhook is to create a new webhook url
-func SetWebhook(webhookUrl, apiToken string) (SetWebhookReturn, error) {
+func SetWebhook(webhookUrl string, r Request) (SetWebhookReturn, error) {
 
-	// Get base url
-	url := baseUrl + apiToken + "/setWebhook"
-
-	// Define client for request
-	client := &http.Client{}
-
-	// Define request
-	request, err := http.NewRequest("GET", url, nil)
-	if err != nil {
-		return SetWebhookReturn{}, err
+	// Set config for request
+	c := Config{
+		Path:   "/setWebhook",
+		Method: "GET",
+		Body:   nil,
 	}
 
 	// Parse url & add attributes
-	parse := request.URL.Query()
-	parse.Add("url", webhookUrl)
-	request.URL.RawQuery = parse.Encode()
-
-	// Send request
-	response, err := client.Do(request)
+	parse, err := url.Parse(c.Path)
 	if err != nil {
 		return SetWebhookReturn{}, err
 	}
+
+	newUrl, err := url.ParseQuery(parse.RawQuery)
+	if err != nil {
+		return SetWebhookReturn{}, err
+	}
+
+	newUrl.Add("url", webhookUrl)
+
+	// Set new url
+	parse.RawQuery = newUrl.Encode()
+	c.Path = fmt.Sprintf("%s", parse)
+
+	// Send request
+	response, err := c.Send(r)
+	if err != nil {
+		return SetWebhookReturn{}, err
+	}
+
+	// Close request
+	defer response.Body.Close()
 
 	// Decode response
 	var decode SetWebhookReturn

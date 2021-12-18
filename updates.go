@@ -13,7 +13,6 @@ package gotelegrambot
 
 import (
 	"encoding/json"
-	"net/http"
 )
 
 // UpdatesReturn is to decode the json data
@@ -101,25 +100,22 @@ type UpdatesReturn struct {
 			} `json:"new_chat_members,omitempty"`
 		} `json:"message,omitempty"`
 	} `json:"result"`
+	ErrorCode   int    `json:"error_code"`
+	Description string `json:"description"`
 }
 
 // Updates is to get the updates from telegram
-func Updates(apiToken string) (UpdatesReturn, error) {
+func Updates(r Request) (UpdatesReturn, error) {
 
-	// Get base url
-	url := baseUrl + apiToken + "/getUpdates"
-
-	// Define client for request
-	client := &http.Client{}
-
-	// Define request
-	request, err := http.NewRequest("GET", url, nil)
-	if err != nil {
-		return UpdatesReturn{}, err
+	// Set config for request
+	c := Config{
+		Path:   "/getUpdates",
+		Method: "GET",
+		Body:   nil,
 	}
 
 	// Send request
-	response, err := client.Do(request)
+	response, err := c.Send(r)
 	if err != nil {
 		return UpdatesReturn{}, err
 	}
