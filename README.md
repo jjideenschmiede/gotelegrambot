@@ -26,12 +26,17 @@ Currently we have the following functions covered:
 If you want to send a message via a Telegram bot, then you can do it as follows.
 
 ```go
-// Create a new message
-message, err := gotelegrambot.CreateMessage("[J&J Notification][🟠 Warning] Es sind 55 Einträge in der API verzeichnet wurden.", "-1234567", "Markdown", "14241124214:ASDJSKALFSIfjewqrfew234123")
+// Define request
+r := gotelegrambot.Request{
+    apiToken: "14241124214:ASDJSKALFSIfjewqrfew234123",
+}
+
+// Create a message
+createMessage, err := gotelegrambot.CreateMessage("New message!", "-1234567", "Markdown", r)
 if err != nil {
     log.Fatalln(err)
 } else {
-    log.Println(message)
+    log.Println(createMessage)
 }
 ```
 
@@ -42,8 +47,13 @@ if err != nil {
 If you want to view the updates, you can do that with the following function.
 
 ```go
+// Define request
+r := gotelegrambot.Request{
+    apiToken: "14241124214:ASDJSKALFSIfjewqrfew234123",
+}
+
 // Get updates
-updates, err := gotelegrambot.Updates("14241124214:ASDJSKALFSIfjewqrfew234123")
+updates, err := gotelegrambot.Updates(r)
 if err != nil {
     log.Fatalln(err)
 } else {
@@ -58,8 +68,13 @@ if err != nil {
 If you want to create a new webhook, you can use the following function.
 
 ```go
+// Define request
+r := gotelegrambot.Request{
+    apiToken: "14241124214:ASDJSKALFSIfjewqrfew234123",
+}
+
 // Set webhook
-setWebhook, err := gotelegrambot.SetWebhook("https://test.de/webhook", "14241124214:ASDJSKALFSIfjewqrfew234123")
+setWebhook, err := gotelegrambot.SetWebhook("https://test.de/webhook", r)
 if err != nil {
     log.Fatalln(err)
 } else {
