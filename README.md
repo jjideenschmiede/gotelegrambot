@@ -12,6 +12,15 @@ go get github.com/jjideenschmiede/gotelegrambot
 
 ## How to use?
 
+Currently we have the following functions covered:
+
+- [Messages](https://github.com/jjideenschmiede/gotelegrambot#messages)
+- [Updates](https://github.com/jjideenschmiede/gotelegrambot#updates)
+- [Webhooks](https://github.com/jjideenschmiede/gotelegrambot#webhooks)
+
+
+## Messages
+
 ### Create a message
 
 If you want to send a message via a Telegram bot, then you can do it as follows.
@@ -26,6 +35,8 @@ if err != nil {
 }
 ```
 
+## Updates
+
 ### Get updates
 
 If you want to view the updates, you can do that with the following function.
@@ -37,5 +48,21 @@ if err != nil {
     log.Fatalln(err)
 } else {
     log.Println(updates)
+}
+```
+
+## Webhooks
+
+### Set a webhook
+
+If you want to create a new webhook, you can use the following function.
+
+```go
+// Set webhook
+setWebhook, err := gotelegrambot.SetWebhook("https://test.de/webhook", "14241124214:ASDJSKALFSIfjewqrfew234123")
+if err != nil {
+    log.Fatalln(err)
+} else {
+    log.Println(setWebhook)
 }
 ```
