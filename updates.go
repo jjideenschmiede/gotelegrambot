@@ -107,7 +107,7 @@ type UpdatesReturn struct {
 func Updates(apiToken string) (UpdatesReturn, error) {
 
 	// Get base url
-	url := "https://api.telegram.org/bot" + apiToken + "/getUpdates"
+	url := baseUrl + apiToken + "/getUpdates"
 
 	// Define client for request
 	client := &http.Client{}

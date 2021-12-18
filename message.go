@@ -42,7 +42,7 @@ type CreateMessageReturn struct {
 func CreateMessage(message, chatId, parseMode, apiToken string) (CreateMessageReturn, error) {
 
 	// Get base url
-	url := "https://api.telegram.org/bot" + apiToken + "/sendMessage"
+	url := baseUrl + apiToken + "/sendMessage"
 
 	// Define client for request
 	client := &http.Client{}
